@@ -35,7 +35,7 @@ describe('Countdown', () => {
     }, done)
   })
 
-  it.only'reduces the countdown every second', (done) => {
+  it.only('reduces the countdown every second', (done) => {
     see('10 Seconds')
     clock.tick(1000)
 
