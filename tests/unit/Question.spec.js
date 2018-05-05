@@ -66,12 +66,9 @@ describe('Question', () => {
   })
 
   it('can cancel out of edit mode', () => {
-    click('#edit')
-
+    click('button#edit')
     type('input[name=title]', 'Changed title')
-
-    click('#cancel')
-
+    click('button#cancel')
     see('The title')
   })
   
