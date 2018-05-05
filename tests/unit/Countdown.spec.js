@@ -27,65 +27,49 @@ describe('Countdown', () => {
     // countdown until December 5 2017
   })
 
-  it('broadcasts when the countdown is finished', (done) => {
+  it('broadcasts when the countdown is finished', async () => {
     clock.tick(10000)
 
-    assertOnNextTick(() => {
-      expect(wrapper.emitted().finished).toBeTruthy()
-    }, done)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted().finished).toBeTruthy()
   })
 
-  it.only('reduces the countdown every second', (done) => {
+  it('reduces the countdown every second', async () => {
     see('10 Seconds')
     clock.tick(1000)
 
-    assertOnNextTick(() => {
-      see('9 Seconds')
-    }, done)
+    await wrapper.vm.$nextTick()
+    see('9 Seconds')
   })
 
-  it('shows an expired message when the countdown has completed', (done) => {
+  it('shows an expired message when the countdown has completed', async () => {
     clock.tick(10000)
 
-    assertOnNextTick(() => {
-      see('Now Expired')
-    }, done)
+    await wrapper.vm.$nextTick()
+    see('Now Expired')
   })
   
-  it('shows a custom message when the countdown has completed', (done) => {
+  it('shows a custom message when the countdown has completed', async () => {
     wrapper.setProps({ expiredText: 'Contest is over' })
 
     clock.tick(10000)
 
-    assertOnNextTick(() => {
-      see('Contest is over')
-    }, done)
+    await wrapper.vm.$nextTick()
+    see('Contest is over')
   })
 
-  it('clears the interval once completed', (done) => {
+  it('clears the interval once completed', async () => {
     clock.tick(10000)
 
     expect(wrapper.vm.now.getSeconds()).toBe(10)
 
-    assertOnNextTick(() => {
-      clock.tick(5000)
-      expect(wrapper.vm.now.getSeconds()).toBe(10)
-    }, done)
+    await wrapper.vm.$nextTick()
+    clock.tick(5000)
+    expect(wrapper.vm.now.getSeconds()).toBe(10)
       // expect(wrapper.emitted().finished).toBeTruthy()
   })
 
   // Helper Functions
-  function assertOnNextTick(callback, done) {
-    wrapper.vm.$nextTick(() => {
-      try {
-        callback()
-        done()
-      } catch (e) {
-        done(e)
-      }
-    })
-  }
-
   function see(text, selector) {
     const wrap = selector ? wrapper.find(selector) : wrapper 
 
