@@ -9,6 +9,8 @@
     "e2e": "vue-cli-service e2e"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "moxios": "^0.4.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {

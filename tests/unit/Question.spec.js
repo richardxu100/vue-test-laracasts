@@ -1,11 +1,14 @@
 import { shallow } from '@vue/test-utils'
 import expect from 'expect'
 import Question from '@/components/Question.vue'
+import moxios from 'moxios'
 
 describe('Question', () => {
   let wrapper
 
   beforeEach(() => {
+    moxios.install()
+
     wrapper = shallow(Question, {
       propsData: {
         dataQuestion: {
@@ -14,6 +17,10 @@ describe('Question', () => {
         }
       }
     })
+  })
+
+  afterEach(() => {
+    moxios.uninstall()
   })
 
   it('can be edited', () => {
@@ -33,16 +40,29 @@ describe('Question', () => {
     expect(wrapper.contains('#edit')).toBe(false)
   })
 
-  it('updates the question after being edited', () => {
+  it('updates the question after being edited', (done) => {
     wrapper.find('#edit').trigger('click')
     
     type('input[name=title]', 'Changed title')
     type('textarea[name=body]', 'Changed body')
 
+    moxios.stubRequest(/questions\/\d+/, {
+      status: 200,
+      response: {
+        title: 'Changed title',
+        body: 'Changed body'
+      }
+    })
+    
     click('#update')
 
     see('Changed title')
     see('Changed body')
+    
+    moxios.wait(() => {
+      see('Your question has been updated.')
+      done() // need this for async assertions
+    })
   })
 
   it('can cancel out of edit mode', () => {
